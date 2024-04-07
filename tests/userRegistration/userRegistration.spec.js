@@ -285,7 +285,7 @@ test.describe('New user registration', ()=>{
     })
 })
 
-test.describe('New user registration (POM)', ()=>{
+test.describe.only('New user registration (POM)', ()=>{
     test.describe('Signup modal', ()=>{
         let signUpPopup
 
@@ -332,21 +332,21 @@ test.describe('New user registration (POM)', ()=>{
                 test('Empty field validation', async ({})=>{
                     await signUpPopup.nameInput.focus()
                     await signUpPopup.nameInput.blur()
-                    await expect(signUpPopup.actualEmptyNameMessage)
+                    await expect(signUpPopup.actualNameErrorMessage)
                         .toHaveText('Name required')
                 })
 
                 test('Wrong data validation', async ({})=>{
                     await signUpPopup.nameInput.fill('Iryna1')
                     await signUpPopup.nameInput.blur()
-                    await expect(signUpPopup.actualWrongNameMessage)
+                    await expect(signUpPopup.actualNameErrorMessage)
                         .toHaveText('Name is invalid')
                 })
 
                 test('Wrong length validation', async ({})=>{
                     await signUpPopup.nameInput.fill('I')
                     await signUpPopup.nameInput.blur()
-                    await expect(signUpPopup.actualWrongNameLengthMessage)
+                    await expect(signUpPopup.actualNameErrorMessage)
                         .toHaveText('Name has to be from 2 to 20 characters long')
                 })
 
@@ -370,21 +370,21 @@ test.describe('New user registration (POM)', ()=>{
             test('Empty field validation', async ({})=>{
                 await signUpPopup.lastNameInput.focus()
                 await signUpPopup.lastNameInput.blur()
-                await expect(signUpPopup.actualEmptyLastNameMessage)
+                await expect(signUpPopup.actualLastNameErrorMessage)
                     .toHaveText('Last name required')
             })
 
             test('Wrong data validation', async ({})=>{
                 await signUpPopup.lastNameInput.fill('Kozak1')
                 await signUpPopup.lastNameInput.blur()
-                await expect(signUpPopup.actualWrongLastNameMessage)
+                await expect(signUpPopup.actualLastNameErrorMessage)
                     .toHaveText('Last name is invalid')
             })
 
             test('Wrong length validation', async ({})=>{
                 await signUpPopup.lastNameInput.fill('K')
                 await signUpPopup.lastNameInput.blur()
-                await expect(signUpPopup.actualWrongLastNameLengthMessage)
+                await expect(signUpPopup.actualLastNameErrorMessage)
                     .toHaveText('Last name has to be from 2 to 20 characters long')
             })
 
@@ -407,14 +407,14 @@ test.describe('New user registration (POM)', ()=>{
             test('Empty field validation', async ({})=>{
                 await signUpPopup.emailInput.focus()
                 await signUpPopup.emailInput.blur()
-                await expect(signUpPopup.actualEmptyEmailMessage)
+                await expect(signUpPopup.actualEmailErrorMessage)
                     .toHaveText('Email required')
             })
 
             test('Wrong data validation', async ({})=>{
                 await signUpPopup.emailInput.fill('aqa-ikozak')
                 await signUpPopup.emailInput.blur()
-                await expect(signUpPopup.actualWrongEmailMessage)
+                await expect(signUpPopup.actualEmailErrorMessage)
                     .toHaveText('Email is incorrect')
             })
 
@@ -438,14 +438,14 @@ test.describe('New user registration (POM)', ()=>{
             test('Empty field validation', async ({})=>{
                 await signUpPopup.passwordInput.focus()
                 await signUpPopup.passwordInput.blur()
-                await expect(signUpPopup.actualEmptyPasswordMessage)
+                await expect(signUpPopup.actualPasswordErrorMessage)
                     .toHaveText('Password required')
             })
 
             test('Wrong data validation', async ({})=>{
                 await signUpPopup.passwordInput.fill('Qwer123')
                 await signUpPopup.passwordInput.blur()
-                await expect(signUpPopup.actualWrongPasswordMessage)
+                await expect(signUpPopup.actualPasswordErrorMessage)
                     .toHaveText('Password has to be from 8 to 15 characters long and ' +
                         'contain at least one integer, one capital, and one small letter')
             })
@@ -469,14 +469,14 @@ test.describe('New user registration (POM)', ()=>{
             test('Empty field validation', async ({})=>{
                 await signUpPopup.repeatPasswordInput.focus()
                 await signUpPopup.repeatPasswordInput.blur()
-                await expect(signUpPopup.actualEmptyRepeatPasswordMessage)
+                await expect(signUpPopup.actualRepeatPasswordErrorMessage)
                     .toHaveText('Re-enter password required')
             })
 
             test('Wrong data validation', async ({})=>{
                 await signUpPopup.repeatPasswordInput.fill('Qwer123')
                 await signUpPopup.repeatPasswordInput.blur()
-                await expect(signUpPopup.actualWrongRepeatPasswordMessage)
+                await expect(signUpPopup.actualRepeatPasswordErrorMessage)
                     .toHaveText('Password has to be from 8 to 15 characters long and ' +
                         'contain at least one integer, one capital, and one small letter')
             })
@@ -491,7 +491,7 @@ test.describe('New user registration (POM)', ()=>{
     })
 })
 
-test.describe('New user registration (POM + functions)', ()=>{
+test.describe.only('New user registration (POM + functions)', ()=>{
     test.describe('Signup modal', ()=> {
         let signUpPopup
 
@@ -564,17 +564,17 @@ test.describe('New user registration (POM + functions)', ()=>{
 
                 test('Empty field validation', async ({}) => {
                     await validateEmptyField(signUpPopup.nameInput,
-                        signUpPopup.actualEmptyNameMessage, 'Name required')
+                        signUpPopup.actualNameErrorMessage, 'Name required')
                 })
 
                 test('Wrong data validation', async ({}) => {
                     await validateWrongData(signUpPopup.nameInput, 'Iryna1',
-                        signUpPopup.actualEmptyNameMessage, 'Name is invalid')
+                        signUpPopup.actualNameErrorMessage, 'Name is invalid')
                 })
 
                 test('Wrong length validation', async ({}) => {
                     await validateWrongLength(signUpPopup.nameInput, 'I',
-                        signUpPopup.actualEmptyNameMessage,
+                        signUpPopup.actualNameErrorMessage,
                         'Name has to be from 2 to 20 characters long')
                 })
 
@@ -594,17 +594,17 @@ test.describe('New user registration (POM + functions)', ()=>{
 
             test('Empty field validation', async ({}) => {
                 await validateEmptyField(signUpPopup.lastNameInput,
-                    signUpPopup.actualEmptyLastNameMessage, 'Last name required')
+                    signUpPopup.actualLastNameErrorMessage, 'Last name required')
             })
 
             test('Wrong data validation', async ({}) => {
                 await validateWrongData(signUpPopup.lastNameInput, 'Kozak1',
-                    signUpPopup.actualEmptyLastNameMessage, 'Last name is invalid')
+                    signUpPopup.actualLastNameErrorMessage, 'Last name is invalid')
             })
 
             test('Wrong length validation', async ({}) => {
                 await validateWrongLength(signUpPopup.lastNameInput, 'K',
-                    signUpPopup.actualEmptyLastNameMessage,
+                    signUpPopup.actualLastNameErrorMessage,
                     'Last name has to be from 2 to 20 characters long')
             })
 
@@ -623,12 +623,12 @@ test.describe('New user registration (POM + functions)', ()=>{
 
             test('Empty field validation', async ({}) => {
                 await validateEmptyField(signUpPopup.emailInput,
-                    signUpPopup.actualEmptyEmailMessage, 'Email required')
+                    signUpPopup.actualEmailErrorMessage, 'Email required')
             })
 
             test('Wrong data validation', async ({}) => {
                 await validateWrongData(signUpPopup.emailInput, 'aqa-ikozak',
-                    signUpPopup.actualEmptyEmailMessage, 'Email is incorrect')
+                    signUpPopup.actualEmailErrorMessage, 'Email is incorrect')
             })
 
             test('Border color validation', async ({}) => {
@@ -646,12 +646,12 @@ test.describe('New user registration (POM + functions)', ()=>{
 
             test('Empty field validation', async ({}) => {
                 await validateEmptyField(signUpPopup.passwordInput,
-                    signUpPopup.actualEmptyPasswordMessage, 'Password required')
+                    signUpPopup.actualPasswordErrorMessage, 'Password required')
             })
 
             test('Wrong data validation', async ({}) => {
                 await validateWrongData(signUpPopup.passwordInput, 'Qwer123',
-                    signUpPopup.actualEmptyPasswordMessage, 'Password has to be from 8 to 15 ' +
+                    signUpPopup.actualPasswordErrorMessage, 'Password has to be from 8 to 15 ' +
                     'characters long and contain at least one integer, one capital, and one small letter')
             })
 
@@ -670,12 +670,12 @@ test.describe('New user registration (POM + functions)', ()=>{
 
             test('Empty field validation', async ({}) => {
                 await validateEmptyField(signUpPopup.repeatPasswordInput,
-                    signUpPopup.actualEmptyRepeatPasswordMessage, 'Re-enter password required')
+                    signUpPopup.actualRepeatPasswordErrorMessage, 'Re-enter password required')
             })
 
             test('Wrong data validation', async ({}) => {
                 await validateWrongData(signUpPopup.repeatPasswordInput, 'Qwer123',
-                    signUpPopup.actualEmptyRepeatPasswordMessage, 'Password has to be from 8 to 15 ' +
+                    signUpPopup.actualRepeatPasswordErrorMessage, 'Password has to be from 8 to 15 ' +
                     'characters long and contain at least one integer, one capital, and one small letter')
             })
 
