@@ -1,7 +1,9 @@
 import {test, expect} from '@playwright/test'
+import {WelcomePage} from "../../src/pageObjects/WelcomePage/WelcomePage.js";
+import SettingsPage from "../../src/pageObjects/SettingsPage/SettingsPage.js";
 
-test.describe.only('New user registration', ()=>{
-    test.describe.only('Signup modal', ()=>{
+test.describe('New user registration', ()=>{
+    test.describe('Signup modal', ()=>{
         test.describe('Positive scenarios', ()=>{
             test.beforeEach(async ({page})=>{
                 await page.goto('')
@@ -278,6 +280,407 @@ test.describe.only('New user registration', ()=>{
                 await repeatPasswordInput.focus()
                 await repeatPasswordInput.blur()
                 await expect(repeatPasswordInput).toHaveCSS('border-color', 'rgb(220, 53, 69)')
+            })
+        })
+    })
+})
+
+test.describe.only('New user registration (POM)', ()=>{
+    test.describe('Signup modal', ()=>{
+        let signUpPopup
+
+        test.describe('Positive scenarios', ()=>{
+            test.beforeEach(async ({page})=>{
+                const welcomePage = new WelcomePage(page)
+                await welcomePage.navigate()
+                signUpPopup = await welcomePage.openSignUpPopup()
+            })
+
+            test('User should be able to sign up', async ({page})=>{
+                await signUpPopup.nameInput.fill('Iryna')
+                await signUpPopup.lastNameInput.fill('Kozak')
+                await signUpPopup.emailInput.fill('aqa-ikozak@gmail.com')
+                await signUpPopup.passwordInput.fill('Qwer1234')
+
+                await expect(signUpPopup.registerButton,
+                    'Register button should be disabled until user fills all the fields with valid data')
+                    .toBeDisabled()
+
+                await signUpPopup.repeatPasswordInput.fill('Qwer1234')
+                await signUpPopup.registerButton.click()
+
+                await expect(page, 'User should be redirected to garage page').toHaveURL(/garage/)
+            })
+
+            test.afterEach(async ({page})=>{
+                const settingsPage = new SettingsPage(page)
+
+                await settingsPage.navigate()
+                await settingsPage.removeMyAccountButton.click()
+                await settingsPage.removeButton.click()
+            })
+        })
+
+        test.describe('Negative scenarios', ()=>{
+            test.describe('Field "Name" validation', ()=>{
+                test.beforeEach(async ({page})=>{
+                    const welcomePage = new WelcomePage(page)
+                    await welcomePage.navigate()
+                    signUpPopup = await welcomePage.openSignUpPopup()
+                })
+
+                test('Empty field validation', async ({})=>{
+                    await signUpPopup.nameInput.focus()
+                    await signUpPopup.nameInput.blur()
+                    await expect(signUpPopup.actualNameErrorMessage)
+                        .toHaveText('Name required')
+                })
+
+                test('Wrong data validation', async ({})=>{
+                    await signUpPopup.nameInput.fill('Iryna1')
+                    await signUpPopup.nameInput.blur()
+                    await expect(signUpPopup.actualNameErrorMessage)
+                        .toHaveText('Name is invalid')
+                })
+
+                test('Wrong length validation', async ({})=>{
+                    await signUpPopup.nameInput.fill('I')
+                    await signUpPopup.nameInput.blur()
+                    await expect(signUpPopup.actualNameErrorMessage)
+                        .toHaveText('Name has to be from 2 to 20 characters long')
+                })
+
+                test('Border color validation', async ({})=>{
+                    await signUpPopup.nameInput.focus()
+                    await signUpPopup.nameInput.blur()
+                    await expect(signUpPopup.nameInput)
+                        .toHaveCSS('border-color', 'rgb(220, 53, 69)')
+                })
+            })
+        })
+
+
+        test.describe('Field "Last name" validation', ()=>{
+            test.beforeEach(async ({page})=>{
+                const welcomePage = new WelcomePage(page)
+                await welcomePage.navigate()
+                signUpPopup = await welcomePage.openSignUpPopup()
+            })
+
+            test('Empty field validation', async ({})=>{
+                await signUpPopup.lastNameInput.focus()
+                await signUpPopup.lastNameInput.blur()
+                await expect(signUpPopup.actualLastNameErrorMessage)
+                    .toHaveText('Last name required')
+            })
+
+            test('Wrong data validation', async ({})=>{
+                await signUpPopup.lastNameInput.fill('Kozak1')
+                await signUpPopup.lastNameInput.blur()
+                await expect(signUpPopup.actualLastNameErrorMessage)
+                    .toHaveText('Last name is invalid')
+            })
+
+            test('Wrong length validation', async ({})=>{
+                await signUpPopup.lastNameInput.fill('K')
+                await signUpPopup.lastNameInput.blur()
+                await expect(signUpPopup.actualLastNameErrorMessage)
+                    .toHaveText('Last name has to be from 2 to 20 characters long')
+            })
+
+            test('Border color validation', async ({})=>{
+                await signUpPopup.lastNameInput.focus()
+                await signUpPopup.lastNameInput.blur()
+                await expect(signUpPopup.lastNameInput)
+                    .toHaveCSS('border-color', 'rgb(220, 53, 69)')
+            })
+        })
+
+
+        test.describe('Field "Email" validation', ()=>{
+            test.beforeEach(async ({page})=>{
+                const welcomePage = new WelcomePage(page)
+                await welcomePage.navigate()
+                signUpPopup = await welcomePage.openSignUpPopup()
+            })
+
+            test('Empty field validation', async ({})=>{
+                await signUpPopup.emailInput.focus()
+                await signUpPopup.emailInput.blur()
+                await expect(signUpPopup.actualEmailErrorMessage)
+                    .toHaveText('Email required')
+            })
+
+            test('Wrong data validation', async ({})=>{
+                await signUpPopup.emailInput.fill('aqa-ikozak')
+                await signUpPopup.emailInput.blur()
+                await expect(signUpPopup.actualEmailErrorMessage)
+                    .toHaveText('Email is incorrect')
+            })
+
+
+            test('Border color validation', async ({})=>{
+                await signUpPopup.emailInput.focus()
+                await signUpPopup.emailInput.blur()
+                await expect(signUpPopup.emailInput)
+                    .toHaveCSS('border-color', 'rgb(220, 53, 69)')
+            })
+        })
+
+
+        test.describe('Field "Password" validation', ()=>{
+            test.beforeEach(async ({page})=>{
+                const welcomePage = new WelcomePage(page)
+                await welcomePage.navigate()
+                signUpPopup = await welcomePage.openSignUpPopup()
+            })
+
+            test('Empty field validation', async ({})=>{
+                await signUpPopup.passwordInput.focus()
+                await signUpPopup.passwordInput.blur()
+                await expect(signUpPopup.actualPasswordErrorMessage)
+                    .toHaveText('Password required')
+            })
+
+            test('Wrong data validation', async ({})=>{
+                await signUpPopup.passwordInput.fill('Qwer123')
+                await signUpPopup.passwordInput.blur()
+                await expect(signUpPopup.actualPasswordErrorMessage)
+                    .toHaveText('Password has to be from 8 to 15 characters long and ' +
+                        'contain at least one integer, one capital, and one small letter')
+            })
+
+            test('Border color validation', async ({})=>{
+                await signUpPopup.passwordInput.focus()
+                await signUpPopup.passwordInput.blur()
+                await expect(signUpPopup.passwordInput)
+                    .toHaveCSS('border-color', 'rgb(220, 53, 69)')
+            })
+        })
+
+
+        test.describe('Field "Re-enter password" validation', ()=>{
+            test.beforeEach(async ({page})=>{
+                const welcomePage = new WelcomePage(page)
+                await welcomePage.navigate()
+                signUpPopup = await welcomePage.openSignUpPopup()
+            })
+
+            test('Empty field validation', async ({})=>{
+                await signUpPopup.repeatPasswordInput.focus()
+                await signUpPopup.repeatPasswordInput.blur()
+                await expect(signUpPopup.actualRepeatPasswordErrorMessage)
+                    .toHaveText('Re-enter password required')
+            })
+
+            test('Wrong data validation', async ({})=>{
+                await signUpPopup.repeatPasswordInput.fill('Qwer123')
+                await signUpPopup.repeatPasswordInput.blur()
+                await expect(signUpPopup.actualRepeatPasswordErrorMessage)
+                    .toHaveText('Password has to be from 8 to 15 characters long and ' +
+                        'contain at least one integer, one capital, and one small letter')
+            })
+
+            test('Border color validation', async ({})=>{
+                await signUpPopup.repeatPasswordInput.focus()
+                await signUpPopup.repeatPasswordInput.blur()
+                await expect(signUpPopup.repeatPasswordInput)
+                    .toHaveCSS('border-color', 'rgb(220, 53, 69)')
+            })
+        })
+    })
+})
+
+test.describe.only('New user registration (POM + functions)', ()=>{
+    test.describe('Signup modal', ()=> {
+        let signUpPopup
+
+        async function validateEmptyField(fieldInput, actualErrorMessage, expectedErrorMessage) {
+            await fieldInput.focus()
+            await fieldInput.blur()
+            await expect(actualErrorMessage).toHaveText(expectedErrorMessage)
+        }
+
+        async function validateWrongData(fieldInput, inputDataString,
+                                         actualErrorMessage, expectedErrorMessage) {
+            await fieldInput.fill(inputDataString)
+            await fieldInput.blur()
+            await expect(actualErrorMessage).toHaveText(expectedErrorMessage)
+        }
+
+        async function validateWrongLength(fieldInput, inputDataString,
+                                           actualErrorMessage, expectedErrorMessage) {
+            await fieldInput.fill(inputDataString)
+            await fieldInput.blur()
+            await expect(actualErrorMessage).toHaveText(expectedErrorMessage)
+        }
+
+        async function validateBorderColor(fieldInput) {
+            await fieldInput.focus()
+            await fieldInput.blur()
+            await expect(fieldInput).toHaveCSS('border-color', 'rgb(220, 53, 69)')
+        }
+
+
+        test.describe('Positive scenarios', () => {
+            test.beforeEach(async ({page}) => {
+                const welcomePage = new WelcomePage(page)
+                await welcomePage.navigate()
+                signUpPopup = await welcomePage.openSignUpPopup()
+            })
+
+            test('User should be able to sign up', async ({page}) => {
+                await signUpPopup.nameInput.fill('Iryna')
+                await signUpPopup.lastNameInput.fill('Kozak')
+                await signUpPopup.emailInput.fill('aqa-ikozak@gmail.com')
+                await signUpPopup.passwordInput.fill('Qwer1234')
+
+                await expect(signUpPopup.registerButton,
+                    'Register button should be disabled until user fills all the fields with valid data')
+                    .toBeDisabled()
+
+                await signUpPopup.repeatPasswordInput.fill('Qwer1234')
+                await signUpPopup.registerButton.click()
+
+                await expect(page, 'User should be redirected to garage page').toHaveURL(/garage/)
+            })
+
+            test.afterEach(async ({page}) => {
+                const settingsPage = new SettingsPage(page)
+
+                await settingsPage.navigate()
+                await settingsPage.removeMyAccountButton.click()
+                await settingsPage.removeButton.click()
+            })
+        })
+
+        test.describe('Negative scenarios', () => {
+            test.describe('Field "Name" validation', () => {
+                test.beforeEach(async ({page}) => {
+                    const welcomePage = new WelcomePage(page)
+                    await welcomePage.navigate()
+                    signUpPopup = await welcomePage.openSignUpPopup()
+                })
+
+                test('Empty field validation', async ({}) => {
+                    await validateEmptyField(signUpPopup.nameInput,
+                        signUpPopup.actualNameErrorMessage, 'Name required')
+                })
+
+                test('Wrong data validation', async ({}) => {
+                    await validateWrongData(signUpPopup.nameInput, 'Iryna1',
+                        signUpPopup.actualNameErrorMessage, 'Name is invalid')
+                })
+
+                test('Wrong length validation', async ({}) => {
+                    await validateWrongLength(signUpPopup.nameInput, 'I',
+                        signUpPopup.actualNameErrorMessage,
+                        'Name has to be from 2 to 20 characters long')
+                })
+
+                test('Border color validation', async ({}) => {
+                    await validateBorderColor(signUpPopup.nameInput)
+                })
+            })
+        })
+
+
+        test.describe('Field "Last name" validation', () => {
+            test.beforeEach(async ({page}) => {
+                const welcomePage = new WelcomePage(page)
+                await welcomePage.navigate()
+                signUpPopup = await welcomePage.openSignUpPopup()
+            })
+
+            test('Empty field validation', async ({}) => {
+                await validateEmptyField(signUpPopup.lastNameInput,
+                    signUpPopup.actualLastNameErrorMessage, 'Last name required')
+            })
+
+            test('Wrong data validation', async ({}) => {
+                await validateWrongData(signUpPopup.lastNameInput, 'Kozak1',
+                    signUpPopup.actualLastNameErrorMessage, 'Last name is invalid')
+            })
+
+            test('Wrong length validation', async ({}) => {
+                await validateWrongLength(signUpPopup.lastNameInput, 'K',
+                    signUpPopup.actualLastNameErrorMessage,
+                    'Last name has to be from 2 to 20 characters long')
+            })
+
+            test('Border color validation', async ({}) => {
+                await validateBorderColor(signUpPopup.lastNameInput)
+            })
+        })
+
+
+        test.describe('Field "Email" validation', () => {
+            test.beforeEach(async ({page}) => {
+                const welcomePage = new WelcomePage(page)
+                await welcomePage.navigate()
+                signUpPopup = await welcomePage.openSignUpPopup()
+            })
+
+            test('Empty field validation', async ({}) => {
+                await validateEmptyField(signUpPopup.emailInput,
+                    signUpPopup.actualEmailErrorMessage, 'Email required')
+            })
+
+            test('Wrong data validation', async ({}) => {
+                await validateWrongData(signUpPopup.emailInput, 'aqa-ikozak',
+                    signUpPopup.actualEmailErrorMessage, 'Email is incorrect')
+            })
+
+            test('Border color validation', async ({}) => {
+                await validateBorderColor(signUpPopup.emailInput)
+            })
+        })
+
+
+        test.describe('Field "Password" validation', () => {
+            test.beforeEach(async ({page}) => {
+                const welcomePage = new WelcomePage(page)
+                await welcomePage.navigate()
+                signUpPopup = await welcomePage.openSignUpPopup()
+            })
+
+            test('Empty field validation', async ({}) => {
+                await validateEmptyField(signUpPopup.passwordInput,
+                    signUpPopup.actualPasswordErrorMessage, 'Password required')
+            })
+
+            test('Wrong data validation', async ({}) => {
+                await validateWrongData(signUpPopup.passwordInput, 'Qwer123',
+                    signUpPopup.actualPasswordErrorMessage, 'Password has to be from 8 to 15 ' +
+                    'characters long and contain at least one integer, one capital, and one small letter')
+            })
+
+            test('Border color validation', async ({}) => {
+                await validateBorderColor(signUpPopup.passwordInput)
+            })
+        })
+
+
+        test.describe('Field "Re-enter password" validation', () => {
+            test.beforeEach(async ({page}) => {
+                const welcomePage = new WelcomePage(page)
+                await welcomePage.navigate()
+                signUpPopup = await welcomePage.openSignUpPopup()
+            })
+
+            test('Empty field validation', async ({}) => {
+                await validateEmptyField(signUpPopup.repeatPasswordInput,
+                    signUpPopup.actualRepeatPasswordErrorMessage, 'Re-enter password required')
+            })
+
+            test('Wrong data validation', async ({}) => {
+                await validateWrongData(signUpPopup.repeatPasswordInput, 'Qwer123',
+                    signUpPopup.actualRepeatPasswordErrorMessage, 'Password has to be from 8 to 15 ' +
+                    'characters long and contain at least one integer, one capital, and one small letter')
+            })
+
+            test('Border color validation', async ({}) => {
+                await validateBorderColor(signUpPopup.repeatPasswordInput)
             })
         })
     })
