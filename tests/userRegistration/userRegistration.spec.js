@@ -285,7 +285,7 @@ test.describe('New user registration', ()=>{
     })
 })
 
-test.describe.only('New user registration (POM)', ()=>{
+test.describe('New user registration (POM)', ()=>{
     test.describe('Signup modal', ()=>{
         let signUpPopup
 
@@ -491,7 +491,7 @@ test.describe.only('New user registration (POM)', ()=>{
     })
 })
 
-test.describe.only('New user registration (POM + functions)', ()=>{
+test.describe('New user registration (POM + functions)', ()=>{
     test.describe('Signup modal', ()=> {
         let signUpPopup
 
