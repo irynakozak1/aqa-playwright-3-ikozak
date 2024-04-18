@@ -9,4 +9,8 @@ export default class BasePage {
     async navigate(){
         await this._page.goto(this._url)
     }
+
+    get page() {
+        return this._page
+    }
 }
