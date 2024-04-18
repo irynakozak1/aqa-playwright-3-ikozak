@@ -1,6 +1,6 @@
 import {expect, test} from '../../src/fixtures/userGaragePage.js'
 
-test.describe.only('Garage (fixtures)', async () => {
+test.describe('Garage (fixtures)', async () => {
         test('User should be able to add car to garage', async ({garagePage}) => {
             const addCarPopup = await garagePage.openAddCarPopup()
 
