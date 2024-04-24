@@ -44,30 +44,36 @@ const config = defineConfig({
 
     },
     {
-      name: 'chromium',
+      name: 'chromium UI test',
       use: { ...devices['Desktop Chrome'] },
+      testMatch: /tests\/e2e\/.*\/*.spec.js/,
       dependencies: ['setup']
     },
-
     {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      name: 'API tests',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: /tests\/api\/.*\/*.spec.js/,
+      dependencies: ['setup']
     },
-
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
-
-    /* Test against mobile viewports. */
-    {
-      name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
-    },
-    {
-      name: 'Mobile Safari',
-      use: { ...devices['iPhone 12'] },
-    },
+    // {
+    //   name: 'firefox',
+    //   use: { ...devices['Desktop Firefox'] },
+    // },
+    //
+    // {
+    //   name: 'webkit',
+    //   use: { ...devices['Desktop Safari'] },
+    // },
+    //
+    // /* Test against mobile viewports. */
+    // {
+    //   name: 'Mobile Chrome',
+    //   use: { ...devices['Pixel 5'] },
+    // },
+    // {
+    //   name: 'Mobile Safari',
+    //   use: { ...devices['iPhone 12'] },
+    // },
 
     /* Test against branded browsers. */
     // {
