@@ -1,6 +1,6 @@
 import {test, expect} from '@playwright/test'
-import {WelcomePage} from "../../src/pageObjects/WelcomePage/WelcomePage.js";
-import SettingsPage from "../../src/pageObjects/SettingsPage/SettingsPage.js";
+import {WelcomePage} from "../../../src/pageObjects/WelcomePage/WelcomePage.js";
+import SettingsPage from "../../../src/pageObjects/SettingsPage/SettingsPage.js";
 
 test.describe('New user registration', ()=>{
     test.describe('Signup modal', ()=>{

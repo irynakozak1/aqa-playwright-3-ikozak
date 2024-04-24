@@ -1,7 +1,7 @@
-import {expect, test} from '../../src/fixtures/userProfilePage.js';
+import {expect, test} from '../../../src/fixtures/userProfilePage.js';
 import {PROFILE_MOCK_RESPONSE} from "./fixtures/profile.js";
 
-test.describe.only('Profile (Network)', async() => {
+test.describe('Profile (Network)', async() => {
     test('should display correct data', async({profilePage}) => {
         await profilePage.page.route('/api/users/profile', (route)=>{
             return route.fulfill({

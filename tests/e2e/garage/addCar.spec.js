@@ -1,4 +1,4 @@
-import {expect, test} from '../../src/fixtures/userGaragePage.js'
+import {expect, test} from '../../../src/fixtures/userGaragePage.js'
 
 test.describe('Garage (fixtures)', async () => {
         test('User should be able to add car to garage', async ({garagePage}) => {
