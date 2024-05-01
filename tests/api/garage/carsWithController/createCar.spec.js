@@ -5,9 +5,9 @@ import CarsController from "../../../../src/controllers/CarsController.js";
 import moment from "moment";
 
 
-test.describe('Create cars', ()=>{
+test.describe.only('Create cars', ()=>{
     test.describe('Positive scenarios', ()=>{
-        test('Create cars of all available brands and models', async ({createCarApiNewUser})=>{
+        test('Create cars of all available brands and models', async ({apiNewUser})=>{
             for (const brand of Object.values(BRANDS)) {
                 for (const model of Object.values(MODELS[brand.id])) {
                     await test.step(`Create car with brand "${brand.title}" and model "${model.title}"`, async ()=>{
@@ -18,7 +18,7 @@ test.describe('Create cars', ()=>{
                         }
 
                         const startTime = new Date()
-                        const response = await createCarApiNewUser.cars.createCar(requestBody)
+                        const response = await apiNewUser.cars.createCar(requestBody)
 
                         const body = await response.json()
                         const expected = {
@@ -143,7 +143,7 @@ test.describe('Create cars', ()=>{
             expect(await response.json()).toEqual({status: 'error', message: 'Invalid mileage type'})
         })
 
-        test('should return 400 when cars limit is reached', async ({createCarApiNewUser})=>{
+        test('should return 400 when cars limit is reached', async ({apiNewUser})=>{
             const carsLimit = 25
             for (let i = 1; i <= carsLimit + 1; i++){
                 const requestBody = {
@@ -151,7 +151,7 @@ test.describe('Create cars', ()=>{
                     "carModelId": randomAvailableModelId,
                     "mileage": mileage
                 }
-                const response = await createCarApiNewUser.cars.createCar(requestBody)
+                const response = await apiNewUser.cars.createCar(requestBody)
 
                 if (i > carsLimit){
                     expect(response.status()).toBe(400)

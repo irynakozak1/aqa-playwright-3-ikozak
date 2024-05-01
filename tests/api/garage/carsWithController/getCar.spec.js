@@ -6,7 +6,7 @@ import moment from "moment";
 
 
 
-test.describe('Get cars', () => {
+test.describe.only('Get cars', () => {
     const brands = Object.values(BRANDS)
     const models = Object.values(MODELS).flatMap(Object.values)
 
@@ -107,15 +107,20 @@ test.describe('Get cars', () => {
             "mileage": mileage
         }
 
+        let createdCarBody1
+        let createdCarBody2
+
+        test.beforeEach(async ({apiNewUser}) => {
+            const createdCarResponse1 = await apiNewUser.cars.createCar(requestBody1)
+            createdCarBody1 = await createdCarResponse1.json()
+
+            const createdCarResponse2 = await apiNewUser.cars.createCar(requestBody2)
+            createdCarBody2 = await createdCarResponse2.json()
+        })
+
         test.describe('Positive scenarios', () => {
-            test('Get user cars', async ({getCarApiNewUser}) => {
-                const createdCarResponse1 = await getCarApiNewUser.cars.createCar(requestBody1)
-                const createdCarBody1 = await createdCarResponse1.json()
-
-                const createdCarResponse2 = await getCarApiNewUser.cars.createCar(requestBody2)
-                const createdCarBody2 = await createdCarResponse2.json()
-
-                const gotCarsResponse = await getCarApiNewUser.cars.getUserCars()
+            test.only('Get user cars', async ({apiNewUser}) => {
+                const gotCarsResponse = await apiNewUser.cars.getUserCars()
                 const gotCarsBody = await gotCarsResponse.json()
 
                 const expectedCar1 = {
@@ -151,22 +156,19 @@ test.describe('Get cars', () => {
                 expect(gotCarsBody.data).toContainEqual(expectedCar2)
             })
 
-            test('Get user car by car id', async ({getCarApiNewUser}) => {
-                const createdCarResponse = await getCarApiNewUser.cars.createCar(requestBody1)
-                const createdCarBody = await createdCarResponse.json()
-
-                const gotCarResponse = await getCarApiNewUser.cars.getUserCarById(createdCarBody.data.id)
+            test('Get user car by car id', async ({apiNewUser}) => {
+                const gotCarResponse = await apiNewUser.cars.getUserCarById(createdCarBody1.data.id)
                 const gotCarBody = await gotCarResponse.json()
 
                 expect(gotCarResponse.status()).toBe(200)
                 expect(gotCarBody.status).toBe('ok')
                 expect(gotCarBody.data).toMatchObject({
-                    "id": createdCarBody.data.id,
+                    "id": createdCarBody1.data.id,
                     "carBrandId": requestBody1.carBrandId,
                     "carModelId": requestBody1.carModelId,
-                    "initialMileage": createdCarBody.data.initialMileage,
-                    "carCreatedAt": moment(createdCarBody.data.carCreatedAt).milliseconds(0).toISOString(),
-                    "updatedMileageAt": moment(createdCarBody.data.updatedMileageAt).milliseconds(0).toISOString(),
+                    "initialMileage": createdCarBody1.data.initialMileage,
+                    "carCreatedAt": moment(createdCarBody1.data.carCreatedAt).milliseconds(0).toISOString(),
+                    "updatedMileageAt": moment(createdCarBody1.data.updatedMileageAt).milliseconds(0).toISOString(),
                     "mileage": requestBody1.mileage,
                     "brand": brand1.title,
                     "model": model1.title,
@@ -185,11 +187,8 @@ test.describe('Get cars', () => {
                 expect(await response.json()).toEqual({ status: 'error', message: 'Not authenticated' })
             })
 
-            test('should return 404 when there is no such car available', async ({getCarApiNewUser}) => {
-                const createdCarResponse = await getCarApiNewUser.cars.createCar(requestBody1)
-                const createdCarBody = await createdCarResponse.json()
-
-                const gotCarResponse = await getCarApiNewUser.cars.getUserCarById(createdCarBody.data.id + 10)
+            test('should return 404 when there is no such car available', async ({apiNewUser}) => {
+                const gotCarResponse = await apiNewUser.cars.getUserCarById(createdCarBody2.data.id + 10)
 
                 expect(gotCarResponse.status()).toBe(404)
                 expect(await gotCarResponse.json()).toEqual({ status: 'error', message: 'Car not found' })

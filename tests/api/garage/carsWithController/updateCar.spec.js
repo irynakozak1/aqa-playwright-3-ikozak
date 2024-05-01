@@ -3,7 +3,7 @@ import {BRANDS} from "../../../../src/data/brands.js";
 import {MODELS} from "../../../../src/data/models.js";
 import moment from "moment";
 
-test.describe('Update car', () => {
+test.describe.only('Update car', () => {
     const mileage = Math.floor(Math.random() * 100)
     const brands = Object.values(BRANDS)
 
@@ -27,18 +27,22 @@ test.describe('Update car', () => {
         "mileage": mileage
     }
 
-    test.describe('Positive scenarios', () => {
-        test('Update car mileage', async ({updateCarApiNewUser}) => {
-            const createdCarResponse = await updateCarApiNewUser.cars.createCar(createCarRequestBody)
-            const createdCarBody = await createdCarResponse.json()
+    let createdCarBody
 
+    test.beforeEach(async ({apiNewUser}) => {
+        const createdCarResponse = await apiNewUser.cars.createCar(createCarRequestBody)
+       createdCarBody = await createdCarResponse.json()
+    })
+
+    test.describe('Positive scenarios', () => {
+        test('Update car mileage', async ({apiNewUser}) => {
             const updateCarRequestBody = {
                 ...createCarRequestBody,
                 "mileage": createCarRequestBody.mileage + 50
             }
 
             const updatedCarResponse =
-                await updateCarApiNewUser.cars.updateUserCarById(createdCarBody.data.id, updateCarRequestBody)
+                await apiNewUser.cars.updateUserCarById(createdCarBody.data.id, updateCarRequestBody)
             const updatedCarBody = await updatedCarResponse.json()
             const expected = {
                 "id": createdCarBody.data.id,
@@ -59,10 +63,7 @@ test.describe('Update car', () => {
             expect(moment(updatedCarBody.data.updatedMileageAt).isAfter(createdCarBody.data.updatedMileageAt))
         })
 
-        test('Update car brand and model', async ({updateCarApiNewUser}) => {
-            const createdCarResponse = await updateCarApiNewUser.cars.createCar(createCarRequestBody)
-            const createdCarBody = await createdCarResponse.json()
-
+        test('Update car brand and model', async ({apiNewUser}) => {
             const brand1 = getRandomAvailableBrand(brands)
             const model1 = getRandomAvailableBrandModel(brand1.id)
 
@@ -73,7 +74,7 @@ test.describe('Update car', () => {
             }
 
             const updatedCarResponse =
-                await updateCarApiNewUser.cars.updateUserCarById(createdCarBody.data.id, updateCarRequestBody)
+                await apiNewUser.cars.updateUserCarById(createdCarBody.data.id, updateCarRequestBody)
             const updatedCarBody = await updatedCarResponse.json()
             const expected = {
                 "id": createdCarBody.data.id,
@@ -93,10 +94,7 @@ test.describe('Update car', () => {
             expect(updatedCarBody.data).toEqual(expected)
         })
 
-        test('Update car model', async ({updateCarApiNewUser}) => {
-            const createdCarResponse = await updateCarApiNewUser.cars.createCar(createCarRequestBody)
-            const createdCarBody = await createdCarResponse.json()
-
+        test('Update car model', async ({apiNewUser}) => {
             const model1 = getRandomAvailableBrandModel(brand.id)
 
             const updateCarRequestBody = {
@@ -105,7 +103,7 @@ test.describe('Update car', () => {
             }
 
             const updatedCarResponse =
-                await updateCarApiNewUser.cars.updateUserCarById(createdCarBody.data.id, updateCarRequestBody)
+                await apiNewUser.cars.updateUserCarById(createdCarBody.data.id, updateCarRequestBody)
             const updatedCarBody = await updatedCarResponse.json()
             const expected = {
                 "id": createdCarBody.data.id,
@@ -125,17 +123,14 @@ test.describe('Update car', () => {
             expect(updatedCarBody.data).toEqual(expected)
         })
 
-        test('Update "Created at" date', async ({updateCarApiNewUser}) => {
-            const createdCarResponse = await updateCarApiNewUser.cars.createCar(createCarRequestBody)
-            const createdCarBody = await createdCarResponse.json()
-
+        test('Update "Created at" date', async ({apiNewUser}) => {
             const updateCarRequestBody = {
                 ...createCarRequestBody,
                 "carCreatedAt": (moment(createdCarBody.data.carCreatedAt).add(2, 'days')).toISOString()
             }
 
             const updatedCarResponse =
-                await updateCarApiNewUser.cars.updateUserCarById(createdCarBody.data.id, updateCarRequestBody)
+                await apiNewUser.cars.updateUserCarById(createdCarBody.data.id, updateCarRequestBody)
             const updatedCarBody = await updatedCarResponse.json()
             const expected = {
                 "id": createdCarBody.data.id,
@@ -157,8 +152,8 @@ test.describe('Update car', () => {
     })
 
     test.describe('Negative scenarios', () => {
-        test('should return 400 when new mileage is less then initial one', async ({updateCarApiNewUser}) => {
-            const createdCarResponse = await updateCarApiNewUser.cars.createCar(createCarRequestBody)
+        test('should return 400 when new mileage is less then initial one', async ({apiNewUser}) => {
+            const createdCarResponse = await apiNewUser.cars.createCar(createCarRequestBody)
             const createdCarBody = await createdCarResponse.json()
 
             const updateCarRequestBody = {
@@ -167,7 +162,7 @@ test.describe('Update car', () => {
             }
 
             const updatedCarResponse =
-                await updateCarApiNewUser.cars.updateUserCarById(createdCarBody.data.id, updateCarRequestBody)
+                await apiNewUser.cars.updateUserCarById(createdCarBody.data.id, updateCarRequestBody)
 
             expect(updatedCarResponse.status()).toBe(400)
             expect(await updatedCarResponse.json()).toEqual({ status: 'error', message: 'New mileage is less then previous entry' })

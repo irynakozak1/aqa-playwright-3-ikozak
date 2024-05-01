@@ -1,6 +1,7 @@
 import {test as base, expect as baseExpect, request as baseRequest} from "@playwright/test";
 import APIClient from "../client/APIClient.js";
 import {USERS} from "../data/users.js";
+import { faker } from '@faker-js/faker'
 
 export const test = base.extend({
     apiExistingUser: async ({}, use) => {
@@ -19,26 +20,14 @@ export const test = base.extend({
         await req.dispose()
     },
 
-    createCarApiNewUser: async ({}, use) => {
-        const client = await APIClient.authenticateWithNewUser(USERS.TEST_TESTOVICH_CREATE_CAR)
-        await use(client)
-        await client.user.deleteUser()
-    },
-
-    getCarApiNewUser: async ({}, use) => {
-        const client = await APIClient.authenticateWithNewUser(USERS.TEST_TESTOVICH_GET_CAR)
-        await use(client)
-        await client.user.deleteUser()
-    },
-
-    updateCarApiNewUser: async ({}, use) => {
-        const client = await APIClient.authenticateWithNewUser(USERS.TEST_TESTOVICH_UPDATE_CAR)
-        await use(client)
-        await client.user.deleteUser()
-    },
-
-    deleteCarApiNewUser: async ({}, use) => {
-        const client = await APIClient.authenticateWithNewUser(USERS.TEST_TESTOVICH_DELETE_CAR)
+    apiNewUser: async ({}, use) => {
+        const client = await APIClient.authenticateWithNewUser({
+            'name': "Test",
+            'lastName': "Testovich",
+            'email': faker.internet.email(),
+            'password': "Qwer1234",
+            'repeatPassword': "Qwer1234"
+        })
         await use(client)
         await client.user.deleteUser()
     }
