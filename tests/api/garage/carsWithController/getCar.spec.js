@@ -119,7 +119,7 @@ test.describe.only('Get cars', () => {
         })
 
         test.describe('Positive scenarios', () => {
-            test.only('Get user cars', async ({apiNewUser}) => {
+            test('Get user cars', async ({apiNewUser}) => {
                 const gotCarsResponse = await apiNewUser.cars.getUserCars()
                 const gotCarsBody = await gotCarsResponse.json()
 

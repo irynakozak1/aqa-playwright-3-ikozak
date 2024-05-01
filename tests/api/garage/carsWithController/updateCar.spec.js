@@ -153,9 +153,6 @@ test.describe.only('Update car', () => {
 
     test.describe('Negative scenarios', () => {
         test('should return 400 when new mileage is less then initial one', async ({apiNewUser}) => {
-            const createdCarResponse = await apiNewUser.cars.createCar(createCarRequestBody)
-            const createdCarBody = await createdCarResponse.json()
-
             const updateCarRequestBody = {
                 ...createCarRequestBody,
                 "mileage": createCarRequestBody.mileage - 50
