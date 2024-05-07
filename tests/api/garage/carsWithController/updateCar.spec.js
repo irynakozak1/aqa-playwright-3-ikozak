@@ -3,7 +3,7 @@ import {BRANDS} from "../../../../src/data/brands.js";
 import {MODELS} from "../../../../src/data/models.js";
 import moment from "moment";
 
-test.describe.only('Update car', () => {
+test.describe('Update car', () => {
     const mileage = Math.floor(Math.random() * 100)
     const brands = Object.values(BRANDS)
 
