@@ -5,7 +5,7 @@ import CarsController from "../../../../src/controllers/CarsController.js";
 import moment from "moment";
 
 
-test.describe.only('Create cars', ()=>{
+test.describe('Create cars', ()=>{
     test.describe('Positive scenarios', ()=>{
         test('Create cars of all available brands and models', async ({apiNewUser})=>{
             for (const brand of Object.values(BRANDS)) {

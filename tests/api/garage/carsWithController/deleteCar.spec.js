@@ -2,7 +2,7 @@ import {expect, test} from "../../../../src/fixtures/userFixtures.js";
 import {BRANDS} from "../../../../src/data/brands.js";
 import {MODELS} from "../../../../src/data/models.js";
 
-test.describe.only('Delete user car', () => {
+test.describe('Delete user car', () => {
     const brands = Object.values(BRANDS)
     const randomAvailableBrandId = brands[Math.floor(Math.random() * brands.length)].id
 
