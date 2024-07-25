@@ -6,7 +6,7 @@ import moment from "moment";
 
 
 
-test.describe.only('Get cars', () => {
+test.describe('Get cars', () => {
     const brands = Object.values(BRANDS)
     const models = Object.values(MODELS).flatMap(Object.values)
 
