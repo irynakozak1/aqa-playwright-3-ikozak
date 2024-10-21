@@ -1,0 +1,30 @@
+version: '2'
+
+services:
+  api-tests:
+    container_name: playwright-api-tests
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - CI=true
+      - BASE_URL=${BASE_URL}
+      - HTTP_CREDENTIALS_USERNAME=${HTTP_CREDENTIALS_USERNAME}
+      - HTTP_CREDENTIALS_PASSWORD=${HTTP_CREDENTIALS_PASSWORD}
+    volumes:
+      - ./playwright-report:/playwright-tests/playwright-report
+    command: ["test:api"]
+
+  e2e-tests:
+    container_name: playwright-e2e-tests
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - CI=true
+      - BASE_URL=${BASE_URL}
+      - HTTP_CREDENTIALS_USERNAME=${HTTP_CREDENTIALS_USERNAME}
+      - HTTP_CREDENTIALS_PASSWORD=${HTTP_CREDENTIALS_PASSWORD}
+    volumes:
+      - ./playwright-report:/playwright-tests/playwright-report
+    command: ["test:e2e"]
